@@ -2,7 +2,7 @@
 #define CONFIG_H
 
 #ifndef TIEWRAP_VERSION
-#define TIEWRAP_VERSION "0.0.0"
+#define TIEWRAP_VERSION ""
 #endif
 
 #define DEFAULT_WIDTH 640

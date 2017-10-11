@@ -6,6 +6,7 @@
 #include <duk_module_node.h>
 #include "module.h"
 #include "process.h"
+#include "window.h"
 #include "config.h"
 
 int quit = 0;
@@ -96,6 +97,7 @@ int main(int argc, char* argv[]){
   else
   {
     duk_eval_string(ctx, "console.log('Tiewrap v" TIEWRAP_VERSION " - No script loaded.');");
+    // Maybe go in a REPL here
   }
 
   // now we get into the SDL loop
