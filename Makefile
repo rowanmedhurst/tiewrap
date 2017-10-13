@@ -5,7 +5,7 @@ DUKTAPE_INC = -Iduktape/src -Iduktape/extras
 DUKTAPE_SRC = duktape/src/duktape.c duktape/extras/console/duk_console.c duktape/extras/module-node/duk_module_node.c
 GIT_DESCRIBE := $(shell git describe --always --dirty)
 CFLAGS = -Wall -c -std=c99 -O2 -DTIEWRAP_VERSION='"$(GIT_DESCRIBE)"' -I. $(SDL_INC) $(DUKTAPE_INC)
-LDFLAGS = $(SDL_LIB)
+LDFLAGS = -lm $(SDL_LIB)
 SRCS = $(DUKTAPE_SRC) $(wildcard *.c)
 OBJS = $(SRCS:%.c=%.o)
 EXE = tiewrap

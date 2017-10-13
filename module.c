@@ -19,6 +19,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <limits.h>
+#include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -28,7 +29,7 @@
 
 // stole this from OpenBSD so I'm not linking it against libbsd just for this function
 // so the code I stole from duktape-nspire works on Linux
-size_t strlcpy(char *dst, const char *src, size_t dsize)
+size_t _strlcpy(char *dst, const char *src, size_t dsize)
 {
   const char *osrc = src;
   size_t nleft = dsize;
@@ -104,7 +105,7 @@ duk_ret_t cb_resolve_module(duk_context *ctx) {
   // External modules
   bool valid = false;
   for (unsigned i = 0; i < sizeof(start) / sizeof(start[0]); ++i) {
-    if (!strlcmp(requested_id, start[i], strlen(start[i]))) {
+    if (!strncmp(requested_id, start[i], strlen(start[i]))) {
       valid = true;
       break;
     }
@@ -128,13 +129,13 @@ duk_ret_t cb_resolve_module(duk_context *ctx) {
 
   size_t remaining = PATH_MAX - (cur - path);
   size_t copied;
-  if ((copied = strlcpy(cur, requested_id, remaining)) >= remaining) goto failure;
+  if ((copied = _strlcpy(cur, requested_id, remaining)) >= remaining) goto failure;
   remaining -= copied;
   cur += copied;
 
   // Check each of the extensions in order
   for (unsigned i = 0; i < sizeof(ext) / sizeof(ext[0]); ++i) {
-    if (strlcpy(cur, ext[i], remaining) >= remaining)
+    if (_strlcpy(cur, ext[i], remaining) >= remaining)
       goto failure;
     if (!stat(path, &stbuf) && S_ISREG(stbuf.st_mode)) {
       if (realpath(path, resolved_id))
