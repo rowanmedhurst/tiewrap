@@ -2,11 +2,10 @@
 #include <stdlib.h>
 #include <SDL2/SDL.h>
 #include <duktape.h>
-#include <duk_console.h>
-#include <duk_module_node.h>
+#include <console/duk_console.h>
+#include <module-node/duk_module_node.h>
 #include "module.h"
 #include "process.h"
-#include "window.h"
 #include "config.h"
 
 int quit = 0;
