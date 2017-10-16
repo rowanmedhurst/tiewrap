@@ -6,6 +6,7 @@
 #include <module-node/duk_module_node.h>
 #include "module.h"
 #include "process.h"
+#include "window.h"
 #include "config.h"
 
 int quit = 0;
@@ -81,6 +82,7 @@ int main(int argc, char* argv[]){
   duk_module_node_init(ctx);
   duk_console_init(ctx, 0);
   duk_process_init(ctx, argc, argv);
+  duk_window_init(ctx, win);
 
   // check if we have a script to run
   if(argc > 1)
