@@ -10,7 +10,7 @@ static duk_ret_t duk_window_alert(duk_context* ctx)
 {
   const char* msg = duk_require_string(ctx, 0);
   const char* title = SDL_GetWindowTitle(window);
-  const char* ret = duk_get_string_default(ctx, 0, title);
+  const char* ret = duk_get_string_default(ctx, 1, title);
   SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_WARNING, ret, msg, window);
   return 0;
 }
@@ -25,6 +25,38 @@ static duk_ret_t duk_window_bordered_set(duk_context* ctx)
 {
   const int borders = duk_require_boolean(ctx, 0);
   SDL_SetWindowBordered(window, borders);
+  return 0;
+}
+
+static duk_ret_t duk_window_brightness_get(duk_context* ctx)
+{
+  const float brightness = SDL_GetWindowBrightness(window);
+  duk_push_number(ctx, brightness);
+  return 1;
+}
+static duk_ret_t duk_window_brightness_set(duk_context* ctx)
+{
+  const double num = duk_require_number(ctx, 0);
+  SDL_SetWindowBrightness(window, num);
+  return 0;
+}
+
+static duk_ret_t duk_window_enablescreensaver_get(duk_context* ctx)
+{
+  duk_push_boolean(ctx, SDL_IsScreenSaverEnabled());
+  return 1;
+}
+static duk_ret_t duk_window_enablescreensaver_set(duk_context* ctx)
+{
+  const int screensaver = duk_require_boolean(ctx, 0);
+  if(screensaver)
+  {
+    SDL_EnableScreenSaver();
+  }
+  else
+  {
+    SDL_DisableScreenSaver();
+  }
   return 0;
 }
 
@@ -134,11 +166,16 @@ void duk_window_init(duk_context* ctx, SDL_Window* win)
   duk_push_c_function(ctx, duk_window_bordered_get, 0);
   duk_push_c_function(ctx, duk_window_bordered_set, 1);
   duk_def_prop(ctx, win_idx, DUK_DEFPROP_HAVE_GETTER|DUK_DEFPROP_HAVE_SETTER);
+
+  duk_push_string(ctx, "brightness");
+  duk_push_c_function(ctx, duk_window_brightness_get, 0);
+  duk_push_c_function(ctx, duk_window_brightness_set, 1);
+  duk_def_prop(ctx, win_idx, DUK_DEFPROP_HAVE_GETTER|DUK_DEFPROP_HAVE_SETTER);
   
-  //duk_push_string(ctx, "enableScreenSaver");
-  //duk_push_c_function(ctx, duk_window_enablescreensaver_get, 0);
-  //duk_push_c_function(ctx, duk_window_enablescreensaver_set, 1);
-  //duk_def_prop(ctx, win_idx, DUK_DEFPROP_HAVE_GETTER|DUK_DEFPROP_HAVE_SETTER);
+  duk_push_string(ctx, "enableScreenSaver");
+  duk_push_c_function(ctx, duk_window_enablescreensaver_get, 0);
+  duk_push_c_function(ctx, duk_window_enablescreensaver_set, 1);
+  duk_def_prop(ctx, win_idx, DUK_DEFPROP_HAVE_GETTER|DUK_DEFPROP_HAVE_SETTER);
 
   //duk_push_string(ctx, "fullScreen");
   //duk_push_c_function(ctx, duk_window_fullscreen_get, 0);
@@ -179,7 +216,7 @@ void duk_window_init(duk_context* ctx, SDL_Window* win)
     switch(info.subsystem)
     {
       case SDL_SYSWM_UNKNOWN:   break;
-      case SDL_SYSWM_WINDOWS:   subsystem = "Windows";                  break;
+      case SDL_SYSWM_WINDOWS:   subsystem = "Windows";                break;
       case SDL_SYSWM_X11:       subsystem = "X11";                    break;
 #if SDL_VERSION_ATLEAST(2, 0, 3)
       case SDL_SYSWM_WINRT:     subsystem = "WinRT";                  break;
@@ -196,6 +233,9 @@ void duk_window_init(duk_context* ctx, SDL_Window* win)
 #endif
 #if SDL_VERSION_ATLEAST(2, 0, 5)
       case SDL_SYSWM_VIVANTE:   subsystem = "Vivante";                break;
+#endif
+#if SDL_VERSION_ATLEAST(2, 0, 6)
+      case SDL_SYSWM_OS2:       subsystem = "OS/2";                   break;
 #endif
     }
   }

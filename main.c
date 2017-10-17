@@ -9,8 +9,6 @@
 #include "window.h"
 #include "config.h"
 
-int quit = 0;
-
 void logSDLError(char* where, char* type)
 {
   fprintf(stderr, "[%s] %s: %s\n", where, type, SDL_GetError());
@@ -109,6 +107,7 @@ int main(int argc, char* argv[])
 
   // now we get into the SDL loop
   SDL_Event e;
+  int quit = 0;
 
   while(quit == 0)
   {
@@ -122,9 +121,15 @@ int main(int argc, char* argv[])
     }
   }
 
+  // get exit code
+  duk_push_global_object(ctx);
+  duk_get_prop_string(ctx, -1, "process");
+  duk_get_prop_string(ctx, -1, "exitCode");
+  int exitCode = duk_get_int_default(ctx, -1, quit-1);
+
   // by now the program has ended
   duk_destroy_heap(ctx);
   SDL_DestroyWindow(win);
   SDL_Quit();
-  return quit-1;
+  return exitCode;
 }

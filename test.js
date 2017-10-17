@@ -7,6 +7,7 @@ console.log("Title: "+window.title);
 console.log("Size: "+window.innerWidth+"x"+window.innerHeight);
 console.log("Position: "+window.screenX+", "+window.screenY);
 console.log("Opacity: "+window.opacity);
+console.log("Screen brightness: "+window.brightness);
 
 alert("Let's change things around!");
 
@@ -20,5 +21,10 @@ window.screenY = 0;
 console.log("Setting position to: "+window.screenX+", "+window.screenY);
 window.opacity = 0.75;
 console.log("Setting opacity to: "+window.opacity);
+window.brightness = 0.5;
+console.log("Setting brightness to: "+window.brightness);
 
-//process.quit();
+process.exitCode = 42;
+console.log("Process should now quit with return value "+process.exitCode);
+
+//process.exit();
