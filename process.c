@@ -42,7 +42,7 @@ void duk_process_init(duk_context* ctx, int argc, char** argv)
 
     char sdlverstr[10];
     SDL_version sdlver;
-    SDL_GetVersion(&sdlver);
+    SDL_VERSION(&sdlver);
     sprintf(sdlverstr, "v%d.%d.%d", sdlver.major, sdlver.minor, sdlver.patch);
     duk_push_string(ctx, sdlverstr);
     duk_put_prop_string(ctx, ver_idx, "sdl");

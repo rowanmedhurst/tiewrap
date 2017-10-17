@@ -60,6 +60,7 @@ static duk_ret_t duk_window_innerwidth_set(duk_context* ctx)
   return 0;
 }
 
+#if SDL_VERSION_ATLEAST(2, 0, 5)
 static duk_ret_t duk_window_opacity_get(duk_context* ctx)
 {
   float opacity;
@@ -73,6 +74,7 @@ static duk_ret_t duk_window_opacity_set(duk_context* ctx)
   SDL_SetWindowOpacity(window, num);
   return 0;
 }
+#endif
 
 static duk_ret_t duk_window_screenx_get(duk_context* ctx)
 {
@@ -153,10 +155,12 @@ void duk_window_init(duk_context* ctx, SDL_Window* win)
   duk_push_c_function(ctx, duk_window_innerwidth_set, 1);
   duk_def_prop(ctx, win_idx, DUK_DEFPROP_HAVE_GETTER|DUK_DEFPROP_HAVE_SETTER);
 
+#if SDL_VERSION_ATLEAST(2, 0, 5)
   duk_push_string(ctx, "opacity");
   duk_push_c_function(ctx, duk_window_opacity_get, 0);
   duk_push_c_function(ctx, duk_window_opacity_set, 1);
   duk_def_prop(ctx, win_idx, DUK_DEFPROP_HAVE_GETTER|DUK_DEFPROP_HAVE_SETTER);
+#endif
 
   duk_push_string(ctx, "screenX");
   duk_push_c_function(ctx, duk_window_screenx_get, 0);
