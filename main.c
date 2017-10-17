@@ -17,36 +17,44 @@ void logSDLError(char* where, char* type)
   fflush(stderr);
 }
 
-static duk_ret_t get_error_stack(duk_context *ctx, __attribute__((unused)) void *udata) {
-  if (duk_is_error(ctx, 0) && duk_has_prop_string(ctx, 0, "stack")) {
+static duk_ret_t get_error_stack(duk_context *ctx, __attribute__((unused)) void *udata)
+{
+  if (duk_is_error(ctx, 0) && duk_has_prop_string(ctx, 0, "stack"))
+  {
     duk_get_prop_string(ctx, 0, "stack");
     duk_remove(ctx, -2);
   }
   return 1;
 }
 
-static void print_error(duk_context* ctx) {
+static void print_error(duk_context* ctx)
+{
   duk_safe_call(ctx, get_error_stack, NULL, 1, 1);
   fprintf(stderr, "[duk] error: %s\n", duk_safe_to_string(ctx, -1));
   fflush(stderr);
   duk_pop(ctx);
 }
 
-static int handle_file(duk_context* ctx, char *path) {
-  if (push_file_contents(ctx, path)) {
+static int handle_file(duk_context* ctx, char *path)
+{
+  if (push_file_contents(ctx, path))
+  {
     print_error(ctx);
     return 1;
   }
-  if (duk_module_node_peval_main(ctx, path)) {
+  if (duk_module_node_peval_main(ctx, path))
+  {
     print_error(ctx);
     return 1;
   }
   return 0;
 }
 
-void fatal_error_handler(__attribute__((unused)) void *udata, const char *msg) {
+void fatal_error_handler(__attribute__((unused)) void *udata, const char *msg)
+{
   fputs("[duk] fatal", stderr);
-  if (msg) {
+  if (msg)
+  {
     fputs(": ", stderr);
     fputs(msg, stderr);
   }
@@ -55,21 +63,25 @@ void fatal_error_handler(__attribute__((unused)) void *udata, const char *msg) {
   exit(1);
 }
 
-int main(int argc, char* argv[]){
+int main(int argc, char* argv[])
+{
   // init SDL
-  if (SDL_Init(SDL_INIT_VIDEO) != 0){
+  if (SDL_Init(SDL_INIT_VIDEO) != 0)
+  {
     logSDLError("SDL_Init", "fatal");
     return 1;
   }
+  // init window
   SDL_Window* win = SDL_CreateWindow("Tiewrap " TIEWRAP_VERSION, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, DEFAULT_WIDTH, DEFAULT_HEIGHT, SDL_WINDOW_SHOWN);
-  if (win == NULL){
+  if (win == NULL)
+  {
     logSDLError("SDL_CreateWindow", "fatal");
     SDL_Quit();
     return 1;
   }
-  SDL_Surface* screen = SDL_GetWindowSurface(win);
-  SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0xFF, 0xFF, 0xFF));
-  SDL_UpdateWindowSurface(win);
+  //SDL_Surface* screen = SDL_GetWindowSurface(win);
+  //SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0xFF, 0xFF, 0xFF));
+  //SDL_UpdateWindowSurface(win);
 
   // create javascript interpreter
   duk_context* ctx = duk_create_heap(NULL, NULL, NULL, NULL, fatal_error_handler);
@@ -88,12 +100,6 @@ int main(int argc, char* argv[]){
   if(argc > 1)
   {
     handle_file(ctx, argv[1]);
-
-    /*duk_push_global_object(ctx);
-    duk_get_prop_string(ctx,-1,"init");
-    duk_require_function(ctx,-1);
-    duk_call(ctx,0);
-    duk_pop(ctx);*/
   }
   else
   {
@@ -110,6 +116,7 @@ int main(int argc, char* argv[]){
     {
       if(e.type == SDL_QUIT)
       {
+        // onquit event here, return value is set to the quit variable so it can cancel it
         quit = 1;
       }
     }
