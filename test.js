@@ -10,6 +10,9 @@ console.log("Opacity: "+window.opacity);
 console.log("Screen brightness: "+window.brightness);
 
 alert("Let's change things around!");
+console.log("Process should sleep for 2s...");
+process.sleep(2000);
+console.log("done.");
 
 window.title = "Hello, world!";
 console.log("Setting title to: "+window.title);
@@ -26,5 +29,3 @@ console.log("Setting brightness to: "+window.brightness);
 
 process.exitCode = 42;
 console.log("Process should now quit with return value "+process.exitCode);
-
-//process.exit();

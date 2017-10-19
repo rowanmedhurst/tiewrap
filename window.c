@@ -8,7 +8,7 @@ SDL_Window* window = NULL;
 
 static duk_ret_t duk_window_alert(duk_context* ctx)
 {
-  const char* msg = duk_require_string(ctx, 0);
+  const char* msg = duk_get_string_default(ctx, 0, "");
   const char* title = SDL_GetWindowTitle(window);
   const char* ret = duk_get_string_default(ctx, 1, title);
   SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_WARNING, ret, msg, window);

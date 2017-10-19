@@ -11,10 +11,16 @@ duk_ret_t duk_process_exit(duk_context* ctx)
   duk_get_prop_string(ctx, -1, "exitCode");
   int exitCode = duk_get_int_default(ctx, -1, 0);
   duk_pop_n(ctx, 3);
-  printf("[duk] debug: Got exit code of %d", exitCode);
   duk_int_t ret = duk_get_int_default(ctx, 0, exitCode);
   SDL_Quit();
   exit(ret);
+  return 0;
+}
+
+duk_ret_t duk_process_sleep(duk_context* ctx)
+{
+  duk_uint_t time = duk_get_uint(ctx, 0);
+  SDL_Delay(time);
   return 0;
 }
 
@@ -40,6 +46,9 @@ void duk_process_init(duk_context* ctx, int argc, char** argv)
   const char* platform = SDL_GetPlatform();
   duk_push_string(ctx, platform);
   duk_put_prop_string(ctx, proc_idx, "platform");
+
+  duk_push_c_function(ctx, duk_process_sleep, 1);
+  duk_put_prop_string(ctx, proc_idx, "sleep");
 
   duk_push_string(ctx, TIEWRAP_VERSION);
   duk_put_prop_string(ctx, proc_idx, "version");
