@@ -92,6 +92,25 @@ static duk_ret_t duk_window_innerwidth_set(duk_context* ctx)
   return 0;
 }
 
+static duk_ret_t duk_window_on(duk_context* ctx)
+{
+  const char* event = duk_require_string(ctx, 0);
+  duk_push_global_stash(ctx);
+  //duk_idx_t event_idx = duk_get_prop_string(ctx, -1, "events");
+  duk_dup(ctx, 1);
+  duk_bool_t rc = duk_put_prop_string(ctx, -2, event);
+  return 0;
+}
+
+static duk_ret_t duk_window_off(duk_context* ctx)
+{
+  const char* event = duk_require_string(ctx, 0);
+  duk_push_global_stash(ctx);
+  //duk_idx_t event_idx = duk_get_prop_string(ctx, -1, "events");
+  duk_bool_t rc = duk_del_prop_string(ctx, -1, event);
+  return 0;
+}
+
 #if SDL_VERSION_ATLEAST(2, 0, 5)
 static duk_ret_t duk_window_opacity_get(duk_context* ctx)
 {
@@ -159,6 +178,9 @@ void duk_window_init(duk_context* ctx, SDL_Window* win)
 
   duk_idx_t win_idx = duk_push_object(ctx);
 
+  duk_push_c_function(ctx, duk_window_on, 2);
+  duk_put_prop_string(ctx, win_idx, "addEventListener");
+
   duk_push_c_function(ctx, duk_window_alert, 2);
   duk_put_prop_string(ctx, win_idx, "alert");
 
@@ -192,12 +214,20 @@ void duk_window_init(duk_context* ctx, SDL_Window* win)
   duk_push_c_function(ctx, duk_window_innerwidth_set, 1);
   duk_def_prop(ctx, win_idx, DUK_DEFPROP_HAVE_GETTER|DUK_DEFPROP_HAVE_SETTER);
 
+  duk_push_c_function(ctx, duk_window_off, 1); 
+  duk_put_prop_string(ctx, win_idx, "off");
+  duk_push_c_function(ctx, duk_window_on, 2);
+  duk_put_prop_string(ctx, win_idx, "on");
+
 #if SDL_VERSION_ATLEAST(2, 0, 5)
   duk_push_string(ctx, "opacity");
   duk_push_c_function(ctx, duk_window_opacity_get, 0);
   duk_push_c_function(ctx, duk_window_opacity_set, 1);
   duk_def_prop(ctx, win_idx, DUK_DEFPROP_HAVE_GETTER|DUK_DEFPROP_HAVE_SETTER);
 #endif
+
+  duk_push_c_function(ctx, duk_window_off, 1);
+  duk_put_prop_string(ctx, win_idx, "removeEventListener");
 
   duk_push_string(ctx, "screenX");
   duk_push_c_function(ctx, duk_window_screenx_get, 0);
@@ -256,4 +286,9 @@ void duk_window_init(duk_context* ctx, SDL_Window* win)
 
   duk_push_c_function(ctx, duk_window_alert, 2);
   duk_put_global_string(ctx, "alert");
+
+  duk_push_global_stash(ctx);
+  duk_push_object(ctx);
+  duk_put_prop_string(ctx, -2, "events");
+  duk_pop(ctx);
 }

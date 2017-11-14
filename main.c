@@ -116,7 +116,19 @@ int main(int argc, char* argv[])
       if(e.type == SDL_QUIT)
       {
         // onquit event here, return value is set to the quit variable so it can cancel it
-        quit = 1;
+        duk_push_global_stash(ctx);
+        //duk_idx_t event_idx = duk_get_prop_string(ctx, -1, "events");
+        duk_get_prop_string(ctx, -1, "unload");
+        duk_int_t rc = duk_pcall(ctx, 0);
+        if(rc == DUK_EXEC_SUCCESS)
+        {
+          quit = duk_get_boolean_default(ctx, -1, 1);
+        }
+        else
+        {
+          quit = 1;
+        }
+        //duk_pop(ctx);
       }
     }
   }

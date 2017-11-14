@@ -1,5 +1,13 @@
 // This file is part of Tiewrap and is mostly used to test features as they are implemented.
 
+function quit()
+{
+  process.exitCode = 42;
+  console.log("Process should now quit with return value "+process.exitCode);
+  alert("Bye!");
+  return true;
+}
+
 console.log("Welcome to Tiewrap "+process.version+" test suite");
 console.log("Using Duktape "+process.versions.duktape+" and SDL "+process.versions.sdl+" on "+process.platform+"/"+window.subsystem);
 console.log("Command line: "+process.argv.join(" "));
@@ -8,6 +16,7 @@ console.log("Size: "+window.innerWidth+"x"+window.innerHeight);
 console.log("Position: "+window.screenX+", "+window.screenY);
 console.log("Opacity: "+window.opacity);
 console.log("Screen brightness: "+window.brightness);
+window.on('unload', quit);
 
 alert("Let's change things around!");
 console.log("Process should sleep for 2s...");
@@ -26,6 +35,3 @@ window.opacity = 0.75;
 console.log("Setting opacity to: "+window.opacity);
 window.brightness = 0.5;
 console.log("Setting brightness to: "+window.brightness);
-
-process.exitCode = 42;
-console.log("Process should now quit with return value "+process.exitCode);
