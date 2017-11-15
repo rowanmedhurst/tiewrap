@@ -7,6 +7,7 @@
 #include "module.h"
 #include "process.h"
 #include "window.h"
+#include "canvas.h"
 #include "config.h"
 
 void logSDLError(char* where, char* type)
@@ -93,6 +94,7 @@ int main(int argc, char* argv[])
   duk_console_init(ctx, 0);
   duk_process_init(ctx, argc, argv);
   duk_window_init(ctx, win);
+  duk_canvas_init(ctx, win);
 
   // check if we have a script to run
   if(argc > 1)
