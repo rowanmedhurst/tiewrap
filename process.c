@@ -1,3 +1,4 @@
+#include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <SDL2/SDL.h>
@@ -24,6 +25,13 @@ duk_ret_t duk_process_sleep(duk_context* ctx)
   return 0;
 }
 
+static duk_ret_t duk_process_stacksize_get(duk_context* ctx)
+{
+  duk_idx_t top = duk_get_top(ctx);
+  duk_push_number(ctx, top);
+  return 1;
+}
+
 void duk_process_init(duk_context* ctx, int argc, char** argv)
 {
   duk_idx_t proc_idx = duk_push_object(ctx);
@@ -43,12 +51,22 @@ void duk_process_init(duk_context* ctx, int argc, char** argv)
   duk_push_int(ctx, 0);
   duk_put_prop_string(ctx, proc_idx, "exitCode");
 
+  duk_push_int(ctx, getpid());
+  duk_put_prop_string(ctx, proc_idx, "pid");
+
+  duk_push_int(ctx, getppid());
+  duk_put_prop_string(ctx, proc_idx, "ppid");
+
   const char* platform = SDL_GetPlatform();
   duk_push_string(ctx, platform);
   duk_put_prop_string(ctx, proc_idx, "platform");
 
   duk_push_c_function(ctx, duk_process_sleep, 1);
   duk_put_prop_string(ctx, proc_idx, "sleep");
+
+  duk_push_string(ctx, "stackSize");
+  duk_push_c_function(ctx, duk_process_stacksize_get, 0);
+  duk_def_prop(ctx, proc_idx, DUK_DEFPROP_HAVE_GETTER);
 
   duk_push_string(ctx, TIEWRAP_VERSION);
   duk_put_prop_string(ctx, proc_idx, "version");

@@ -113,24 +113,98 @@ int main(int argc, char* argv[])
   {
     while(SDL_PollEvent(&e)!=0)
     {
+      if(e.type == SDL_KEYDOWN)
+      {
+        duk_push_global_stash(ctx);
+        //duk_idx_t event_idx = duk_get_prop_string(ctx, -1, "events");
+        duk_get_prop_string(ctx, -1, "keydown");
+        duk_idx_t e_idx = duk_push_object(ctx);
+        duk_push_boolean(ctx, e.key.keysym.mod&KMOD_ALT);
+        duk_put_prop_string(ctx, e_idx, "altKey");
+        duk_push_number(ctx, e.key.keysym.sym);
+        duk_put_prop_string(ctx, e_idx, "code");
+        duk_push_boolean(ctx, e.key.keysym.mod&KMOD_CTRL);
+        duk_put_prop_string(ctx, e_idx, "ctrlKey");
+        duk_push_string(ctx, SDL_GetKeyName(e.key.keysym.sym));
+        duk_put_prop_string(ctx, e_idx, "key");
+        duk_push_number(ctx, e.key.keysym.scancode);
+        duk_put_prop_string(ctx, e_idx, "location");
+        duk_push_boolean(ctx, e.key.keysym.mod&KMOD_GUI);
+        duk_put_prop_string(ctx, e_idx, "metaKey");
+        duk_push_boolean(ctx, e.key.repeat);
+        duk_put_prop_string(ctx, e_idx, "repeat");
+        duk_push_boolean(ctx, e.key.keysym.mod&KMOD_SHIFT);
+        duk_put_prop_string(ctx, e_idx, "shiftKey");
+        duk_push_number(ctx, e.key.timestamp);
+        duk_put_prop_string(ctx, e_idx, "timeStamp");
+        duk_push_string(ctx, "keydown");
+        duk_put_prop_string(ctx, e_idx, "type");
+        duk_pcall(ctx, 1);
+        duk_pop_2(ctx);
+      }
+      if(e.type == SDL_KEYUP)
+      {
+        duk_push_global_stash(ctx);
+        //duk_idx_t event_idx = duk_get_prop_string(ctx, -1, "events");
+        duk_get_prop_string(ctx, -1, "keyup");
+        duk_idx_t e_idx = duk_push_object(ctx);
+        duk_push_boolean(ctx, e.key.keysym.mod&KMOD_ALT);
+        duk_put_prop_string(ctx, e_idx, "altKey");
+        duk_push_number(ctx, e.key.keysym.sym);
+        duk_put_prop_string(ctx, e_idx, "code");
+        duk_push_boolean(ctx, e.key.keysym.mod&KMOD_CTRL);
+        duk_put_prop_string(ctx, e_idx, "ctrlKey");
+        duk_push_string(ctx, SDL_GetKeyName(e.key.keysym.sym));
+        duk_put_prop_string(ctx, e_idx, "key");
+        duk_push_number(ctx, e.key.keysym.scancode);
+        duk_put_prop_string(ctx, e_idx, "location");
+        duk_push_boolean(ctx, e.key.keysym.mod&KMOD_GUI);
+        duk_put_prop_string(ctx, e_idx, "metaKey");
+        duk_push_boolean(ctx, e.key.repeat);
+        duk_put_prop_string(ctx, e_idx, "repeat");
+        duk_push_boolean(ctx, e.key.keysym.mod&KMOD_SHIFT);
+        duk_put_prop_string(ctx, e_idx, "shiftKey");
+        duk_push_number(ctx, e.key.timestamp);
+        duk_put_prop_string(ctx, e_idx, "timeStamp");
+        duk_push_string(ctx, "keyup");
+        duk_put_prop_string(ctx, e_idx, "type");
+        duk_pcall(ctx, 1);
+        duk_pop_2(ctx);
+      }
       if(e.type == SDL_QUIT)
       {
         // onquit event here, return value is set to the quit variable so it can cancel it
         duk_push_global_stash(ctx);
         //duk_idx_t event_idx = duk_get_prop_string(ctx, -1, "events");
         duk_get_prop_string(ctx, -1, "unload");
-        duk_int_t rc = duk_pcall(ctx, 0);
+        duk_idx_t e_idx = duk_push_object(ctx);
+        duk_push_number(ctx, e.quit.timestamp);
+        duk_put_prop_string(ctx, e_idx, "timeStamp");
+        duk_push_string(ctx, "unload");
+        duk_put_prop_string(ctx, e_idx, "type");
+        duk_int_t rc = duk_pcall(ctx, 1);
         if(rc == DUK_EXEC_SUCCESS)
         {
           quit = duk_get_boolean_default(ctx, -1, 1);
+          duk_pop(ctx);
         }
         else
         {
           quit = 1;
         }
-        //duk_pop(ctx);
+        duk_pop_2(ctx);
       }
     }
+    duk_push_global_stash(ctx);
+    //duk_idx_t event_idx = duk_get_prop_string(ctx, -1, "events");
+    duk_get_prop_string(ctx, -1, "draw");
+    duk_idx_t e_idx = duk_push_object(ctx);
+    duk_push_number(ctx, SDL_GetTicks());
+    duk_put_prop_string(ctx, e_idx, "timeStamp");
+    duk_push_string(ctx, "draw");
+    duk_put_prop_string(ctx, e_idx, "type");
+    duk_pcall(ctx, 1);
+    duk_pop_2(ctx);
   }
 
   // get exit code

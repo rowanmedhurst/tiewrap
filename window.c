@@ -98,7 +98,7 @@ static duk_ret_t duk_window_on(duk_context* ctx)
   duk_push_global_stash(ctx);
   //duk_idx_t event_idx = duk_get_prop_string(ctx, -1, "events");
   duk_dup(ctx, 1);
-  duk_bool_t rc = duk_put_prop_string(ctx, -2, event);
+  duk_put_prop_string(ctx, -2, event);
   return 0;
 }
 
@@ -107,7 +107,7 @@ static duk_ret_t duk_window_off(duk_context* ctx)
   const char* event = duk_require_string(ctx, 0);
   duk_push_global_stash(ctx);
   //duk_idx_t event_idx = duk_get_prop_string(ctx, -1, "events");
-  duk_bool_t rc = duk_del_prop_string(ctx, -1, event);
+  duk_del_prop_string(ctx, -1, event);
   return 0;
 }
 
