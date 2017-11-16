@@ -9,7 +9,14 @@ static duk_ret_t duk_canvas_getcontext(duk_context* ctx)
 {
   const char* type = duk_require_string(ctx, 0);
   duk_push_object(ctx);
-  //TODO: return a different object whether we have type == '2d' or 'gl' or 'webgl' or whatever
+  if(strcmp(type, "2d") == 0)
+  {
+    
+  }
+  if(strcmp(type, "gl") == 0 || strcmp(type, "webgl") == 0 || strcmp(type, "gl2") == 0 || strcmp(type, "webgl2") == 0)
+  {
+    
+  }
   return 1;
 }
 

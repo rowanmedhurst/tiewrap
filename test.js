@@ -11,6 +11,14 @@ function eventHandler(e)
   {
     console.log("keyup "+e.key);
   }
+  if(e.type == "mousedown")
+  {
+    console.log("mousedown "+e.buttons+" at ("+e.clientX+","+e.clientY+") ("+e.screenX+","+e.screenY+")");
+  }
+  if(e.type == "mouseup")
+  {
+    console.log("mouseup "+e.buttons+" at ("+e.clientX+","+e.clientY+") ("+e.screenX+","+e.screenY+")");
+  }
   if(e.type == "unload")
   {
     alert("Bye!");
@@ -41,6 +49,8 @@ console.log("Screen brightness: "+window.brightness);
 
 window.on('keydown', eventHandler);
 window.on('keyup', eventHandler);
+window.on('mousedown', eventHandler);
+window.on('mouseup', eventHandler);
 window.on('unload', eventHandler);
 window.on('draw', draw);
 

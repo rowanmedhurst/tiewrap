@@ -173,6 +173,124 @@ int main(int argc, char* argv[])
         duk_pcall(ctx, 1);
         duk_pop_2(ctx);
       }
+      if(e.type == SDL_MOUSEBUTTONDOWN)
+      {
+        int x,y;
+        SDL_GetWindowPosition(win, &x, &y);
+        SDL_Keymod mod = SDL_GetModState();
+        Uint32 state = SDL_GetMouseState(NULL, NULL);
+        duk_push_global_stash(ctx);
+        //duk_idx_t event_idx = duk_get_prop_string(ctx, -1, "events");
+        duk_get_prop_string(ctx, -1, "mousedown");
+        duk_idx_t e_idx = duk_push_object(ctx);
+        duk_push_boolean(ctx, mod&KMOD_ALT);
+        duk_put_prop_string(ctx, e_idx, "altKey");
+        duk_push_number(ctx, e.button.button);
+        duk_put_prop_string(ctx, e_idx, "button");
+        duk_push_number(ctx, state);
+        duk_put_prop_string(ctx, e_idx, "buttons");
+        duk_push_number(ctx, e.button.x);
+        duk_put_prop_string(ctx, e_idx, "clientX");
+        duk_push_number(ctx, e.button.y);
+        duk_put_prop_string(ctx, e_idx, "clientY");
+        duk_push_boolean(ctx, mod&KMOD_CTRL);
+        duk_put_prop_string(ctx, e_idx, "ctrlKey");
+        duk_push_number(ctx, e.button.clicks);
+        duk_put_prop_string(ctx, e_idx, "detail");
+        duk_push_boolean(ctx, mod&KMOD_GUI);
+        duk_put_prop_string(ctx, e_idx, "metaKey");
+        duk_push_number(ctx, e.button.x+x);
+        duk_put_prop_string(ctx, e_idx, "screenX");
+        duk_push_number(ctx, e.button.y+y);
+        duk_put_prop_string(ctx, e_idx, "screenY");
+        duk_push_boolean(ctx, mod&KMOD_SHIFT);
+        duk_put_prop_string(ctx, e_idx, "shiftKey");
+        duk_push_number(ctx, e.button.timestamp);
+        duk_put_prop_string(ctx, e_idx, "timeStamp");
+        duk_push_string(ctx, "mousedown");
+        duk_put_prop_string(ctx, e_idx, "type");
+        duk_pcall(ctx, 1);
+        duk_pop_2(ctx);
+      }
+      if(e.type == SDL_MOUSEBUTTONUP)
+      {
+        int x,y;
+        SDL_GetWindowPosition(win, &x, &y);
+        SDL_Keymod mod = SDL_GetModState();
+        Uint32 state = SDL_GetMouseState(NULL, NULL);
+        duk_push_global_stash(ctx);
+        //duk_idx_t event_idx = duk_get_prop_string(ctx, -1, "events");
+        duk_get_prop_string(ctx, -1, "mouseup");
+        duk_idx_t e_idx = duk_push_object(ctx);
+        duk_push_boolean(ctx, mod&KMOD_ALT);
+        duk_put_prop_string(ctx, e_idx, "altKey");
+        duk_push_number(ctx, e.button.button);
+        duk_put_prop_string(ctx, e_idx, "button");
+        duk_push_number(ctx, state);
+        duk_put_prop_string(ctx, e_idx, "buttons");
+        duk_push_number(ctx, e.button.x);
+        duk_put_prop_string(ctx, e_idx, "clientX");
+        duk_push_number(ctx, e.button.y);
+        duk_put_prop_string(ctx, e_idx, "clientY");
+        duk_push_boolean(ctx, mod&KMOD_CTRL);
+        duk_put_prop_string(ctx, e_idx, "ctrlKey");
+        duk_push_number(ctx, e.button.clicks);
+        duk_put_prop_string(ctx, e_idx, "detail");
+        duk_push_boolean(ctx, mod&KMOD_GUI);
+        duk_put_prop_string(ctx, e_idx, "metaKey");
+        duk_push_number(ctx, e.button.x+x);
+        duk_put_prop_string(ctx, e_idx, "screenX");
+        duk_push_number(ctx, e.button.y+y);
+        duk_put_prop_string(ctx, e_idx, "screenY");
+        duk_push_boolean(ctx, mod&KMOD_SHIFT);
+        duk_put_prop_string(ctx, e_idx, "shiftKey");
+        duk_push_number(ctx, e.button.timestamp);
+        duk_put_prop_string(ctx, e_idx, "timeStamp");
+        duk_push_string(ctx, "mouseup");
+        duk_put_prop_string(ctx, e_idx, "type");
+        duk_pcall(ctx, 1);
+        duk_pop_2(ctx);
+      }
+      if(e.type == SDL_MOUSEMOTION)
+      {
+        int x,y;
+        SDL_GetWindowPosition(win, &x, &y);
+        SDL_Keymod mod = SDL_GetModState();
+        duk_push_global_stash(ctx);
+        //duk_idx_t event_idx = duk_get_prop_string(ctx, -1, "events");
+        duk_get_prop_string(ctx, -1, "mousemove");
+        duk_idx_t e_idx = duk_push_object(ctx);
+        duk_push_boolean(ctx, mod&KMOD_ALT);
+        duk_put_prop_string(ctx, e_idx, "altKey");
+        duk_push_number(ctx, 0);
+        duk_put_prop_string(ctx, e_idx, "button");
+        duk_push_number(ctx, e.motion.state);
+        duk_put_prop_string(ctx, e_idx, "buttons");
+        duk_push_number(ctx, e.motion.x);
+        duk_put_prop_string(ctx, e_idx, "clientX");
+        duk_push_number(ctx, e.motion.y);
+        duk_put_prop_string(ctx, e_idx, "clientY");
+        duk_push_boolean(ctx, mod&KMOD_CTRL);
+        duk_put_prop_string(ctx, e_idx, "ctrlKey");
+        duk_push_boolean(ctx, mod&KMOD_GUI);
+        duk_put_prop_string(ctx, e_idx, "metaKey");
+        duk_push_number(ctx, e.motion.xrel);
+        duk_put_prop_string(ctx, e_idx, "relativeX");
+        duk_push_number(ctx, e.motion.yrel);
+        duk_put_prop_string(ctx, e_idx, "relativeY");
+        duk_push_number(ctx, e.motion.x+x);
+        duk_put_prop_string(ctx, e_idx, "screenX");
+        duk_push_number(ctx, e.motion.y+y);
+        duk_put_prop_string(ctx, e_idx, "screenY");
+        duk_push_boolean(ctx, mod&KMOD_SHIFT);
+        duk_put_prop_string(ctx, e_idx, "shiftKey");
+        duk_push_number(ctx, e.motion.timestamp);
+        duk_put_prop_string(ctx, e_idx, "timeStamp");
+        duk_push_string(ctx, "mousemove");
+        duk_put_prop_string(ctx, e_idx, "type");
+        duk_pcall(ctx, 1);
+        duk_pop_2(ctx);
+      }
       if(e.type == SDL_QUIT)
       {
         // onquit event here, return value is set to the quit variable so it can cancel it
