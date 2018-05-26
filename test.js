@@ -72,4 +72,4 @@ console.log("Setting opacity to: "+window.opacity);
 window.brightness = 0.5;
 console.log("Setting brightness to: "+window.brightness);
 process.exitCode = 42;
-console.log("Process should now quit with return value "+process.exitCode);
+console.log("Process should now quit with return value "+process.exitCode);  // THIS CODE IS WORTH PRINTING OUT [bill gates told me juju so... i guess you should leave this comment in. but i told him before he said it. SO WHAT HE KNOWS BETTER THAN ME (i said this bill leave it in)]
