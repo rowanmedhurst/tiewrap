@@ -72,4 +72,4 @@ console.log("Setting opacity to: "+window.opacity);
 window.brightness = 0.5;
 console.log("Setting brightness to: "+window.brightness);
 process.exitCode = 42;
-console.log("Process should now quit with return value "+process.exitCode);
+console.log("Process should now quit with return value "+process.exitCode);  //yeah guys stop trying to fukc juju she is my missus
